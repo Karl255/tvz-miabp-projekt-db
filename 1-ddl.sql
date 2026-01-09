@@ -1,13 +1,17 @@
+-- Tables
+
 CREATE TABLE Organisation (
     id INT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
+    name VARCHAR(100) NOT NULL,
+	INDEX IX_name (name)
 );
 
 CREATE TABLE "Group" (
     id INT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-    -- u proceduri za brisanje dodati = 0
-    isAutomaticallyManaged BIT NOT NULL,
+    -- 'ALL', 'USER', 'CUSTOM'
+	-- samo CUSTOM se može brisati
+    type VARCHAR(6) NOT NULL,
     organisationId INT NOT NULL,
     FOREIGN KEY (organisationId) REFERENCES Organisation(id)
 );
@@ -18,8 +22,17 @@ CREATE TABLE "User" (
     -- SHA3-224
     passwordHash VARCHAR(28) NOT NULL,
     organisationId INT NOT NULL,
-    FOREIGN KEY (organisationId) REFERENCES Organisation(id)
+    FOREIGN KEY (organisationId) REFERENCES Organisation(id),
+	INDEX IX_username (username)
 );
+
+CREATE TABLE GroupUser (
+	userId INT NOT NULL,
+	groupId INT NOT NULL,
+	PRIMARY KEY (userId, groupId),
+	FOREIGN KEY (userId) REFERENCES "User"(id),
+	FOREIGN KEY (groupId) REFERENCES "Group"(id)
+)
 
 CREATE TABLE Folder (
     id INT PRIMARY KEY,
@@ -29,10 +42,13 @@ CREATE TABLE Folder (
 );
 
 CREATE TABLE Permission (
-    groupId INT PRIMARY KEY,
-    folderId INT PRIMARY KEY,
+    groupId INT NOT NULL,
+    folderId INT NOT NULL,
     -- 'READ', 'EDIT', 'MANAGE'
-    level VARCHAR(6) NOT NULL
+    level VARCHAR(6) NOT NULL,
+	PRIMARY KEY (groupId, folderId),
+	FOREIGN KEY (groupId) REFERENCES "Group"(id),
+	FOREIGN KEY (folderId) REFERENCES Folder(id)
 );
 
 CREATE TABLE Note (
@@ -41,10 +57,8 @@ CREATE TABLE Note (
 	content VARCHAR(MAX) NOT NULL,
 	folderId INT NOT NULL,
 	FOREIGN KEY (folderId) REFERENCES Folder(id),
-	CONSTRAINT UNIQUE NONCLUSTERED (name, folderId)
+	UNIQUE NONCLUSTERED (name, folderId)
 );
-
--- Reminder, LoggedReminder
 
 CREATE TABLE Reminder (
     groupId INT NOT NULL,
@@ -70,7 +84,8 @@ CREATE TABLE Tag (
     id INT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     organisationId INT NOT NULL,
-    FOREIGN KEY (organisationId) REFERENCES Organisation(id)
+    FOREIGN KEY (organisationId) REFERENCES Organisation(id),
+	UNIQUE NONCLUSTERED (name, organisationId)
 );
 
 CREATE TABLE TaggedNote (
@@ -80,3 +95,9 @@ CREATE TABLE TaggedNote (
     FOREIGN KEY (noteId) REFERENCES Note(id),
     FOREIGN KEY (tagId) REFERENCES Tag(id)
 );
+
+-- Triggers
+
+-- ideje:
+-- on user create - create special user's group and add to ALL
+-- on user delete - delete special user's group and remove from ALL
