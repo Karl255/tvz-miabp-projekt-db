@@ -1,3 +1,5 @@
+-- login with any user account
+
 -- permissions from logged-in user don't grant any permissions, so both fail:
 SELECT * FROM Sifrarnik."User";
 SELECT * FROM Io.Note;

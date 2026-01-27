@@ -2,10 +2,10 @@
 
 -- 4-security
 
-DROP USER IF EXISTS Admin_Matej;
-DROP USER IF EXISTS Admin_Karlo;
+DROP USER IF EXISTS User_Pero;
+DROP USER IF EXISTS User_Karlo;
+DROP USER IF EXISTS User_Matej;
 DROP USER IF EXISTS DB_Admin;
-DROP USER IF EXISTS APP_Login;
 
 IF DATABASE_PRINCIPAL_ID('APP_Uloga') IS NOT NULL
 	DROP APPLICATION ROLE APP_Uloga;
@@ -13,9 +13,9 @@ IF DATABASE_PRINCIPAL_ID('APP_Uloga') IS NOT NULL
 IF DATABASE_PRINCIPAL_ID('DB_Administratori') IS NOT NULL
 	DROP ROLE DB_Administratori;
 
-IF EXISTS( SELECT name FROM master.sys.server_principals WHERE name = 'APP_Login') DROP LOGIN APP_Login;
-IF EXISTS( SELECT name FROM master.sys.server_principals WHERE name = 'Admin_Matej') DROP LOGIN Admin_Matej;
-IF EXISTS( SELECT name FROM master.sys.server_principals WHERE name = 'Admin_Karlo') DROP LOGIN Admin_Karlo;
+IF EXISTS (SELECT name FROM master.sys.server_principals WHERE name = 'User_Pero') DROP LOGIN User_Pero;
+IF EXISTS (SELECT name FROM master.sys.server_principals WHERE name = 'User_Karlo') DROP LOGIN User_Karlo;
+IF EXISTS (SELECT name FROM master.sys.server_principals WHERE name = 'User_Matej') DROP LOGIN User_Matej;
 
 -- 3-sp
 
