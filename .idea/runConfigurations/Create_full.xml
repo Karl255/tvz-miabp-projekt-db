@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Create full" type="DatabaseScript">
+    <script-file value="$PROJECT_DIR$/1-db.sql" />
+    <script-file value="$PROJECT_DIR$/2-ddl.sql" />
+    <script-file value="$PROJECT_DIR$/3-sp.sql" />
+    <script-file value="$PROJECT_DIR$/4-security.sql" />
+    <script-file value="$PROJECT_DIR$/10-seed.sql" />
+    <script-mode>FILE</script-mode>
+    <data-source id="2c7147f4-b605-4a5b-b561-4d1a5bddea10" namespace="database/&quot;master&quot;" />
+    <method v="2" />
+  </configuration>
+</component>

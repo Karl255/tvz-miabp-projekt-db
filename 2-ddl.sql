@@ -70,7 +70,7 @@ CREATE TABLE Io.Reminder (
     FOREIGN KEY (noteId) REFERENCES Io.Note(id)
 );
 
-CREATE TABLE Io.LoggedRemidner (
+CREATE TABLE Io.LoggedReminder (
 	id INT PRIMARY KEY,
     groupId INT NOT NULL,
     noteId INT NOT NULL,
