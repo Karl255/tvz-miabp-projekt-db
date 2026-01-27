@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:sqlserver://172.19.173.17;MultipleActiveResultSets=True;TrustServerCertificate=True;database=master</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="AppLogin@MIABP" uuid="6406f5ca-b0e1-47be-a237-72e10f840ff3">
+      <driver-ref>sqlserver.ms</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
+      <jdbc-url>jdbc:sqlserver://172.19.173.17;MultipleActiveResultSets=True;TrustServerCertificate=True;database=master</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

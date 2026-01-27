@@ -6,7 +6,7 @@
     <file url="file://$PROJECT_DIR$/2-ddl.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/3-sp.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/4-security.sql" dialect="TSQL" />
-    <file url="file://$PROJECT_DIR$/X-demos.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/X-drop.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/demos/8-app-role.sql" dialect="TSQL" />
   </component>
 </project>

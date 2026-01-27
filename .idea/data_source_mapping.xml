@@ -6,8 +6,9 @@
     <file url="file://$PROJECT_DIR$/2-ddl.sql" value="2c7147f4-b605-4a5b-b561-4d1a5bddea10" />
     <file url="file://$PROJECT_DIR$/3-sp.sql" value="2c7147f4-b605-4a5b-b561-4d1a5bddea10" />
     <file url="file://$PROJECT_DIR$/4-security.sql" value="2c7147f4-b605-4a5b-b561-4d1a5bddea10" />
-    <file url="file://$PROJECT_DIR$/X-demos.sql" value="2c7147f4-b605-4a5b-b561-4d1a5bddea10" />
     <file url="file://$PROJECT_DIR$/X-drop.sql" value="2c7147f4-b605-4a5b-b561-4d1a5bddea10" />
+    <file url="file://$PROJECT_DIR$/demos/8-app-role.sql" value="6406f5ca-b0e1-47be-a237-72e10f840ff3" />
     <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/2c7147f4-b605-4a5b-b561-4d1a5bddea10/console.sql" value="2c7147f4-b605-4a5b-b561-4d1a5bddea10" />
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/6406f5ca-b0e1-47be-a237-72e10f840ff3/console.sql" value="6406f5ca-b0e1-47be-a237-72e10f840ff3" />
   </component>
 </project>
