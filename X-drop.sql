@@ -18,9 +18,23 @@ IF EXISTS (SELECT name FROM master.sys.server_principals WHERE name = 'User_Karl
 IF EXISTS (SELECT name FROM master.sys.server_principals WHERE name = 'User_Matej') DROP LOGIN User_Matej;
 
 -- 3-sp
+DROP PROCEDURE Sifrarnik.InsertUser;
+DROP PROCEDURE Sifrarnik.AddUserPermission;
+DROP PROCEDURE Sifrarnik.AddGroupPermission
+-- fn
+DROP FUNCTION Sifrarnik.fn_Group_get_Users;
+DROP FUNCTION "Io".fn_Folder_get_Path;
+DROP FUNCTION "Io".fn_Note_get_Info;
+DROP FUNCTION "Io".fn_Folder_get_UserPermission;
+DROP FUNCTION "Io".fn_Folder_get_Content;
 
 -- 2-ddl
 
+-- triggers
+DROP TRIGGER IF EXISTS Sifrarnik.trig_Organisation_Insert;
+DROP TRIGGER IF EXISTS Sifrarnik.trig_User_Delete
+
+-- tables
 DROP TABLE IF EXISTS Io.TaggedNote;
 DROP TABLE IF EXISTS Io.Tag;
 DROP TABLE IF EXISTS Io.LoggedReminder;
