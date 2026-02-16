@@ -3,12 +3,12 @@ INSERT INTO Sifrarnik.Organisation (name) VALUES ('Test org.');
 INSERT INTO Sifrarnik.Organisation (name) VALUES ('TVZ');
 
 -- User (automatically creates special group for each user and adds users to their organisations 'ALL' group)
-EXEC Sifrarnik.InsertUser @username = 'testUser', @password = 'testpass', @organisationId = 1;
-EXEC Sifrarnik.InsertUser @username = 'student_user', @password = 'studentpass', @organisationId = 2;
-EXEC Sifrarnik.InsertUser @username = 'admin', @password = 'adminpass', @organisationId = 2;
-EXEC Sifrarnik.InsertUser @username = 'dekan', @password = 'dekanpass', @organisationId = 2;
-EXEC Sifrarnik.InsertUser @username = 'teta_iz_referade', @password = 'referadapass', @organisationId = 2;
-EXEC Sifrarnik.InsertUser @username = 'prof1', @password = 'profpass', @organisationId = 2;
+EXEC Sifrarnik.InsertUser @username = 'testUser', @password = 'testpass', @email = 'test@test.com', @organisationId = 1;
+EXEC Sifrarnik.InsertUser @username = 'student_user', @password = 'studentpass', @email = 'student@tvz.com', @organisationId = 2;
+EXEC Sifrarnik.InsertUser @username = 'admin', @password = 'adminpass', @email = 'admin@tvz.com', @organisationId = 2;
+EXEC Sifrarnik.InsertUser @username = 'dekan', @password = 'dekanpass', @email = 'dekan@tvz.com', @organisationId = 2;
+EXEC Sifrarnik.InsertUser @username = 'teta_iz_referade', @password = 'referadapass', @email = 'referada@tvz.hr', @organisationId = 2;
+EXEC Sifrarnik.InsertUser @username = 'prof1', @password = 'profpass', @email = 'prof@tvz.hr', @organisationId = 2;
 
 -- Groups (non-automatically created groups)
 INSERT INTO Sifrarnik."Group" (name, type, organisationId) VALUES ('TVZ - Admin', 'CUSTOM', 2);

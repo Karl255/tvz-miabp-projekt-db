@@ -20,15 +20,22 @@ IF EXISTS (SELECT name FROM master.sys.server_principals WHERE name = 'User_Mate
 -- 3-sp
 DROP PROCEDURE Sifrarnik.InsertUser;
 DROP PROCEDURE Sifrarnik.AddUserPermission;
-DROP PROCEDURE Sifrarnik.AddGroupPermission
+DROP PROCEDURE Sifrarnik.AddGroupPermission;
+DROP PROCEDURE Sifrarnik.UserLogin;
 -- fn
 DROP FUNCTION Sifrarnik.fn_Group_get_Users;
+DROP FUNCTION Sifrarnik.fn_User_get_Groups;
 DROP FUNCTION "Io".fn_Folder_get_Path;
 DROP FUNCTION "Io".fn_Note_get_Info;
 DROP FUNCTION "Io".fn_Folder_get_UserPermission;
 DROP FUNCTION "Io".fn_Folder_get_Content;
 
 -- 2-ddl
+
+-- KEYS
+DROP SYMMETRIC KEY SimetricniKljuc;
+DROP ASYMMETRIC KEY AsimetricniKljuc;
+DROP MASTER KEY;
 
 -- triggers
 DROP TRIGGER IF EXISTS Sifrarnik.trig_Organisation_Insert;

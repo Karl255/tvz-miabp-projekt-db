@@ -2,10 +2,24 @@
 CREATE PROCEDURE Sifrarnik.InsertUser
 	@username VARCHAR(32),
 	@password VARCHAR(32),
+	@email VARCHAR(32),
 	@organisationId INT
 AS
 BEGIN
-	INSERT INTO Sifrarnik."User" (username, passwordHash) VALUES (@username, HASHBYTES('SHA2_256', @password));
+	-- Open asymmetric key
+    OPEN SYMMETRIC KEY SimetricniKljuc
+        DECRYPTION BY ASYMMETRIC KEY AsimetricniKljuc;
+
+	DECLARE @passwordHash VARBINARY(256) = HASHBYTES('SHA2_256', @password)
+    DECLARE @encryptedEmail VARBINARY(MAX);
+
+    SET @encryptedEmail =
+        ENCRYPTBYKEY(
+            KEY_GUID('SimetricniKljuc'),
+            @email
+        );
+
+	INSERT INTO Sifrarnik."User" (username, passwordHash, email) VALUES (@username, @passwordHash, @encryptedEmail);
 
 	DECLARE @userId INT = SCOPE_IDENTITY();
 
@@ -15,9 +29,38 @@ BEGIN
 
 	INSERT INTO Sifrarnik."GroupUser" (userId, groupId) VALUES (@userId, @groupId);
 	INSERT INTO Sifrarnik."GroupUser" (userId, groupId) SELECT @userId, g.organisationId FROM Sifrarnik."Group" g WHERE g.organisationId = @organisationId AND g.type = 'ORGANISATION_ALL';
+	
+	CLOSE SYMMETRIC KEY SimetricniKljuc;
 END
 GO
-	
+
+-- SP: Prijava korisnika
+CREATE PROCEDURE Sifrarnik.UserLogin
+	@username VARCHAR(32),
+	@password VARCHAR(32)
+AS
+BEGIN
+	DECLARE @hashedPassword VARBINARY(256) = (SELECT passwordHash FROM Sifrarnik."User" WHERE username = @username);
+
+	IF @hashedPassword IS NULL
+		SELECT CONCAT('Korisnik ', @username, ' ne postoji') as msg;
+	ELSE IF @hashedPassword = HASHBYTES('SHA2_256', @password)
+	BEGIN
+		OPEN SYMMETRIC KEY SimetricniKljuc
+		DECRYPTION BY ASYMMETRIC KEY AsimetricniKljuc;
+
+		SELECT 
+			username,
+			CONVERT(VARCHAR(32), DECRYPTBYKEY(email)) as email
+		FROM Sifrarnik."User"
+		WHERE username = @username;
+
+		CLOSE SYMMETRIC KEY SimetricniKljuc;
+	END
+	ELSE
+		SELECT 'Prijava neuspješna' as msg;
+END
+GO
 
 -- SP: Dodaj permission za usera.
 CREATE PROCEDURE Sifrarnik.AddUserPermission
@@ -55,6 +98,17 @@ RETURN
 	SELECT u.id as userId, u.username FROM Sifrarnik."User" u
 	INNER JOIN Sifrarnik.GroupUser gu ON gu.userId = u.id
 	WHERE gu.groupId = @groupId
+)
+GO
+
+-- FN: Dohvaćanje svih grupa u kojima se neki user nalazi
+CREATE FUNCTION Sifrarnik.fn_User_get_Groups (@userId INT)
+RETURNS TABLE AS
+RETURN
+(
+	SELECT * FROM Sifrarnik."Group" g
+	INNER JOIN Sifrarnik.GroupUser gu ON g.id = gu.groupId
+	WHERE gu.userId = @userId
 )
 GO
 

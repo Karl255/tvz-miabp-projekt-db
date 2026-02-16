@@ -9,9 +9,8 @@ CREATE TABLE Sifrarnik."Group" (
     id INT PRIMARY KEY IDENTITY(1,1),
     name VARCHAR(50) NOT NULL,
     -- 'ORGANISATION_ALL', 'USER', 'CUSTOM'
-	-- samo CUSTOM se može brisati
     type VARCHAR(16) NOT NULL,
-    organisationId INT,
+    organisationId INT NOT NULL,
     FOREIGN KEY (organisationId) REFERENCES Sifrarnik.Organisation(id),
     CONSTRAINT ck_GroupType
     CHECK (type in ('ORGANISATION_ALL', 'USER', 'CUSTOM'))
@@ -21,6 +20,7 @@ CREATE TABLE Sifrarnik."User" (
     id INT PRIMARY KEY IDENTITY(1,1),
     username VARCHAR(32) NOT NULL,
     passwordHash VARBINARY(256) NOT NULL,
+    email VARBINARY(MAX) NOT NULL,
 	INDEX IX_username (username)
 );
 
@@ -45,8 +45,8 @@ CREATE TABLE Io.Permission (
     -- 'VIEW', 'EDIT', 'MANAGE'
     level VARCHAR(6) NOT NULL,
 	PRIMARY KEY (groupId, folderId),
-	FOREIGN KEY (groupId) REFERENCES Sifrarnik."Group"(id),
-	FOREIGN KEY (folderId) REFERENCES Io.Folder(id),
+	FOREIGN KEY (groupId) REFERENCES Sifrarnik."Group"(id) ON DELETE CASCADE,
+	FOREIGN KEY (folderId) REFERENCES Io.Folder(id) ON DELETE CASCADE,
     CONSTRAINT ck_PermissionLevel
     CHECK (level in('VIEW', 'EDIT', 'MANAGE'))
 );
@@ -92,8 +92,8 @@ CREATE TABLE Io.TaggedNote (
     noteId INT NOT NULL,
     tagId INT NOT NULL,
     PRIMARY KEY (noteId, tagId),
-    FOREIGN KEY (noteId) REFERENCES Io.Note(id),
-    FOREIGN KEY (tagId) REFERENCES Io.Tag(id)
+    FOREIGN KEY (noteId) REFERENCES Io.Note(id) ON DELETE CASCADE,
+    FOREIGN KEY (tagId) REFERENCES Io.Tag(id) ON DELETE CASCADE
 );
 GO
 
@@ -115,4 +115,19 @@ ON Sifrarnik."User"
 AFTER DELETE
 AS
     DELETE FROM Sifrarnik."Group" WHERE type = 'USER' AND name = (SELECT CONCAT(d.username, ' - Group') FROM deleted d);
+GO
+
+
+-- Keys
+-- Glavni kljuc
+CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'GlavniKljucPass'
+GO
+-- Asimetricni kljuc
+CREATE ASYMMETRIC KEY AsimetricniKLjuc
+WITH ALGORITHM = RSA_2048
+GO
+-- Simetricni kljuc
+CREATE SYMMETRIC KEY SimetricniKljuc
+WITH ALGORITHM = AES_256
+ENCRYPTION BY ASYMMETRIC KEY AsimetricniKljuc
 GO
