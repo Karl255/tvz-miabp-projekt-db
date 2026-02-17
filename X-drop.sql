@@ -17,10 +17,32 @@ IF EXISTS (SELECT name FROM master.sys.server_principals WHERE name = 'User_Pero
 IF EXISTS (SELECT name FROM master.sys.server_principals WHERE name = 'User_Karlo') DROP LOGIN User_Karlo;
 IF EXISTS (SELECT name FROM master.sys.server_principals WHERE name = 'User_Matej') DROP LOGIN User_Matej;
 
--- 3-sp
+-- 3 stored procedures & functions
+--sp
+DROP PROCEDURE Sifrarnik.InsertUser;
+DROP PROCEDURE Sifrarnik.AddUserPermission;
+DROP PROCEDURE Sifrarnik.AddGroupPermission;
+DROP PROCEDURE Sifrarnik.LoginUser;
+-- fn
+DROP FUNCTION Sifrarnik.fn_GetGroupUsers;
+DROP FUNCTION Sifrarnik.fn_GetUserGroups;
+DROP FUNCTION "Io".fn_GetFolderPath;
+DROP FUNCTION "Io".fn_GetNoteInfo;
+DROP FUNCTION "Io".fn_GetFolderUserPermission;
+DROP FUNCTION "Io".fn_GetFolderContent;
 
 -- 2-ddl
 
+-- keys
+DROP SYMMETRIC KEY SimetricniKljuc;
+DROP ASYMMETRIC KEY AsimetricniKljuc;
+DROP MASTER KEY;
+
+-- triggers
+DROP TRIGGER IF EXISTS Sifrarnik.trig_Organisation_Insert;
+DROP TRIGGER IF EXISTS Sifrarnik.trig_User_Delete
+
+-- tables
 DROP TABLE IF EXISTS Io.TaggedNote;
 DROP TABLE IF EXISTS Io.Tag;
 DROP TABLE IF EXISTS Io.LoggedReminder;
