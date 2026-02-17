@@ -19,6 +19,7 @@ CREATE TABLE Sifrarnik."Group" (
 CREATE TABLE Sifrarnik."User" (
     id INT PRIMARY KEY IDENTITY(1,1),
     username VARCHAR(32) NOT NULL,
+    -- SHA2-256
     passwordHash VARBINARY(256) NOT NULL,
     email VARBINARY(MAX) NOT NULL,
 	INDEX IX_username (username)
@@ -105,7 +106,7 @@ AFTER INSERT
 AS
     INSERT INTO	Sifrarnik."Group" (name, type, organisationId) 
 		SELECT 
-		CONCAT(i.name, ' - Group'), 'ORGANISATION_ALL', i.id 
+		i.name, 'ORGANISATION_ALL', i.id 
 		FROM inserted i;
 GO
 
@@ -114,7 +115,7 @@ CREATE TRIGGER trig_User_Delete
 ON Sifrarnik."User"
 AFTER DELETE
 AS
-    DELETE FROM Sifrarnik."Group" WHERE type = 'USER' AND name = (SELECT CONCAT(d.username, ' - Group') FROM deleted d);
+    DELETE FROM Sifrarnik."Group" WHERE type = 'USER' AND name = (SELECT d.username FROM deleted d)
 GO
 
 

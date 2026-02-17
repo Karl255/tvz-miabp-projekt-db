@@ -17,22 +17,23 @@ IF EXISTS (SELECT name FROM master.sys.server_principals WHERE name = 'User_Pero
 IF EXISTS (SELECT name FROM master.sys.server_principals WHERE name = 'User_Karlo') DROP LOGIN User_Karlo;
 IF EXISTS (SELECT name FROM master.sys.server_principals WHERE name = 'User_Matej') DROP LOGIN User_Matej;
 
--- 3-sp
+-- 3 stored procedures & functions
+--sp
 DROP PROCEDURE Sifrarnik.InsertUser;
 DROP PROCEDURE Sifrarnik.AddUserPermission;
 DROP PROCEDURE Sifrarnik.AddGroupPermission;
-DROP PROCEDURE Sifrarnik.UserLogin;
+DROP PROCEDURE Sifrarnik.LoginUser;
 -- fn
-DROP FUNCTION Sifrarnik.fn_Group_get_Users;
-DROP FUNCTION Sifrarnik.fn_User_get_Groups;
-DROP FUNCTION "Io".fn_Folder_get_Path;
-DROP FUNCTION "Io".fn_Note_get_Info;
-DROP FUNCTION "Io".fn_Folder_get_UserPermission;
-DROP FUNCTION "Io".fn_Folder_get_Content;
+DROP FUNCTION Sifrarnik.fn_GetGroupUsers;
+DROP FUNCTION Sifrarnik.fn_GetUserGroups;
+DROP FUNCTION "Io".fn_GetFolderPath;
+DROP FUNCTION "Io".fn_GetNoteInfo;
+DROP FUNCTION "Io".fn_GetFolderUserPermission;
+DROP FUNCTION "Io".fn_GetFolderContent;
 
 -- 2-ddl
 
--- KEYS
+-- keys
 DROP SYMMETRIC KEY SimetricniKljuc;
 DROP ASYMMETRIC KEY AsimetricniKljuc;
 DROP MASTER KEY;

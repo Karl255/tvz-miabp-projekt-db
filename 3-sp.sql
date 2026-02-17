@@ -23,7 +23,7 @@ BEGIN
 
 	DECLARE @userId INT = SCOPE_IDENTITY();
 
-	INSERT INTO Sifrarnik."Group" (name, type, organisationId) VALUES (CONCAT(@username, ' - Group'),'USER',@organisationId);
+	INSERT INTO Sifrarnik."Group" (name, type, organisationId) VALUES (@username,'USER',@organisationId);
 
 	DECLARE @groupId INT = SCOPE_IDENTITY();
 
@@ -35,21 +35,20 @@ END
 GO
 
 -- SP: Prijava korisnika
-CREATE PROCEDURE Sifrarnik.UserLogin
+CREATE PROCEDURE Sifrarnik.LoginUser
 	@username VARCHAR(32),
 	@password VARCHAR(32)
 AS
 BEGIN
 	DECLARE @hashedPassword VARBINARY(256) = (SELECT passwordHash FROM Sifrarnik."User" WHERE username = @username);
 
-	IF @hashedPassword IS NULL
-		SELECT CONCAT('Korisnik ', @username, ' ne postoji') as msg;
-	ELSE IF @hashedPassword = HASHBYTES('SHA2_256', @password)
+	IF @hashedPassword IS NOT NULL AND @hashedPassword = HASHBYTES('SHA2_256', @password)
 	BEGIN
 		OPEN SYMMETRIC KEY SimetricniKljuc
 		DECRYPTION BY ASYMMETRIC KEY AsimetricniKljuc;
 
-		SELECT 
+		SELECT
+			1 as result,
 			username,
 			CONVERT(VARCHAR(32), DECRYPTBYKEY(email)) as email
 		FROM Sifrarnik."User"
@@ -58,7 +57,7 @@ BEGIN
 		CLOSE SYMMETRIC KEY SimetricniKljuc;
 	END
 	ELSE
-		SELECT 'Prijava neuspješna' as msg;
+		SELECT 0 as result, 'Prijava neuspješna' as msg;
 END
 GO
 
@@ -91,7 +90,7 @@ GO
 
 -- Funkcije ------------------------------------------------------
 -- FN: Dohvaćanje svih usera u grupi
-CREATE FUNCTION Sifrarnik.fn_Group_get_Users (@groupId INT)
+CREATE FUNCTION Sifrarnik.fn_GetGroupUsers (@groupId INT)
 RETURNS TABLE AS
 RETURN
 (
@@ -102,7 +101,7 @@ RETURN
 GO
 
 -- FN: Dohvaćanje svih grupa u kojima se neki user nalazi
-CREATE FUNCTION Sifrarnik.fn_User_get_Groups (@userId INT)
+CREATE FUNCTION Sifrarnik.fn_GetUserGroups (@userId INT)
 RETURNS TABLE AS
 RETURN
 (
@@ -113,7 +112,7 @@ RETURN
 GO
 
 -- FN: Dohvaćanje putanje nekog foldera
-CREATE FUNCTION "Io".fn_Folder_get_Path (@folderId INT)
+CREATE FUNCTION "Io".fn_GetFolderPath (@folderId INT)
 RETURNS VARCHAR(255) AS
 BEGIN
 	DECLARE @path VARCHAR(255) = (SELECT CONCAT(name,'/') FROM "Io".Folder WHERE id = @folderId);
@@ -134,11 +133,11 @@ END
 GO
 
 -- FN: Dohvačanje bilješke s dodatnim info
-CREATE FUNCTION "Io".fn_Note_get_Info(@noteId INT)
+CREATE FUNCTION "Io".fn_GetNoteInfo(@noteId INT)
 RETURNS TABLE AS
 RETURN
 (
-	SELECT n.id, n.name, n.content, COALESCE(STRING_AGG(t.name, ', '),'-') as tags, "Io".fn_Folder_get_Path(f.id) as "path" FROM "Io".Note n
+	SELECT n.id, n.name, n.content, COALESCE(STRING_AGG(t.name, ', '),'-') as tags, "Io".fn_GetFolderPath(f.id) as "path" FROM "Io".Note n
 	LEFT JOIN "Io".TaggedNote tn ON n.id = tn.noteId
 	LEFT JOIN "Io".Tag t ON t.id = tn.tagId
 	INNER JOIN "Io".Folder f ON n.folderId = f.id
@@ -150,7 +149,7 @@ GO
 -- FN: Dobivanje permissiona korisnika prema folderu.
 	-- ulaz: folderId, userId
 	-- izlaz: permission level ('READ', 'EDIT', 'MANAGE')
-CREATE FUNCTION "Io".fn_Folder_get_UserPermission(@userId INT, @folderId INT)
+CREATE FUNCTION "Io".fn_GetFolderUserPermission(@userId INT, @folderId INT)
 RETURNS VARCHAR (6) AS
 BEGIN
 	DECLARE @permissionLevel VARCHAR(6);
@@ -158,17 +157,17 @@ BEGIN
 	WHILE @permissionLevel IS NULL AND @currentFolder IS NOT NULL
 	BEGIN
 		SET @permissionLevel = (
-		SELECT TOP (1) p.level as PermissionLevel FROM "Io".Permission p
-		INNER JOIN "Io".Folder f on f.id = p.folderId
-		INNER JOIN Sifrarnik."Group" g on g.id = p.groupId
-		INNER JOIN Sifrarnik.GroupUser gu on g.id = gu.groupId
-		WHERE gu.userId = @userId AND f.id = @currentFolder
-		ORDER BY 
-		CASE p.level
-			WHEN 'VIEW' THEN 1
-			WHEN 'EDIT' THEN 2
-			WHEN 'MANAGE' THEN 3
-		END DESC
+			SELECT TOP (1) p.level as PermissionLevel FROM "Io".Permission p
+			INNER JOIN "Io".Folder f on f.id = p.folderId
+			INNER JOIN Sifrarnik."Group" g on g.id = p.groupId
+			INNER JOIN Sifrarnik.GroupUser gu on g.id = gu.groupId
+			WHERE gu.userId = @userId AND f.id = @currentFolder
+			ORDER BY 
+			CASE p.level
+				WHEN 'VIEW' THEN 1
+				WHEN 'EDIT' THEN 2
+				WHEN 'MANAGE' THEN 3
+			END DESC
 		);
 		SET @currentFolder = (SELECT parentFolderId FROM "Io".Folder WHERE id = @currentFolder);
 	END
@@ -177,7 +176,7 @@ END
 GO
 
 -- FN: Prikaži sadržaj foldera (folderId može biti NULL). User mora imati bilokoji permission.
-CREATE FUNCTION "Io".fn_Folder_get_Content(@folderId INT)
+CREATE FUNCTION "Io".fn_GetFolderContent(@folderId INT)
 RETURNS TABLE AS
 RETURN
 (
