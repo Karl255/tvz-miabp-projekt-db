@@ -19,6 +19,7 @@ CREATE TABLE Sifrarnik."Group" (
 CREATE TABLE Sifrarnik."User" (
     id INT PRIMARY KEY IDENTITY(1,1),
     username VARCHAR(32) NOT NULL,
+    dateOfBirth DATE NOT NULL,
     -- SHA2-256
     passwordHash VARBINARY(256) NOT NULL,
     email VARBINARY(MAX) NOT NULL,
