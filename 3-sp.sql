@@ -1,6 +1,7 @@
 -- SP: Kreiraj novog korisnika. Treba hashirati plaintext lozinku.
 CREATE PROCEDURE Sifrarnik.InsertUser
 	@username VARCHAR(32),
+	@dateOfBirth DATE,
 	@password VARCHAR(32),
 	@email VARCHAR(32),
 	@organisationId INT
@@ -11,15 +12,15 @@ BEGIN
         DECRYPTION BY ASYMMETRIC KEY AsimetricniKljuc;
 
 	DECLARE @passwordHash VARBINARY(256) = HASHBYTES('SHA2_256', @password)
-    DECLARE @encryptedEmail VARBINARY(MAX);
 
+    DECLARE @encryptedEmail VARBINARY(MAX);
     SET @encryptedEmail =
         ENCRYPTBYKEY(
             KEY_GUID('SimetricniKljuc'),
             @email
         );
 
-	INSERT INTO Sifrarnik."User" (username, passwordHash, email) VALUES (@username, @passwordHash, @encryptedEmail);
+	INSERT INTO Sifrarnik."User" (username, dateOfBirth, passwordHash, email) VALUES (@username, @dateOfBirth, @passwordHash, @encryptedEmail);
 
 	DECLARE @userId INT = SCOPE_IDENTITY();
 

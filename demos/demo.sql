@@ -22,3 +22,20 @@ SELECT "Io".fn_GetFolderUserPermission(6, 11); -- userId, folderId
 EXEC Sifrarnik.InsertUser @username = 'encryptedUser', @password = 'encryptpass', @email = 'encrypt@test.com', @organisationId = 1;
 SELECT * FROM Sifrarnik."User" WHERE username = 'encryptedUser';
 EXEC Sifrarnik.LoginUser @username = 'encryptedUser', @password = 'encryptpass';
+
+-- Dinamičko maskiranje
+ALTER TABLE Sifrarnik."User" ALTER COLUMN dateOfBirth ADD MASKED WITH(FUNCTION = 'default()');
+ALTER TABLE "Io".Note ALTER COLUMN content ADD MASKED WITH(FUNCTION = 'partial(1,"...",0)');
+
+CREATE USER test_user WITHOUT LOGIN;
+GRANT SELECT ON Sifrarnik."User" TO test_user;
+GRANT SELECT ON "Io".Note TO test_user;
+
+EXECUTE AS USER = 'test_user';
+
+SELECT CURRENT_USER;
+
+SELECT * FROM Sifrarnik."User";
+SELECT * FROM "Io".Note;
+
+REVERT;
