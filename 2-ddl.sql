@@ -78,8 +78,10 @@ CREATE TABLE Io.LoggedReminder (
 	id INT PRIMARY KEY IDENTITY(1,1),
     groupId INT NOT NULL,
     noteId INT NOT NULL,
-	fired DATETIME NOT NULL,
-	FOREIGN KEY (groupId, noteId) REFERENCES Io.Reminder(groupId, noteId)
+	fired DATETIME NOT NULL
+
+    FOREIGN KEY (groupId) REFERENCES Sifrarnik."Group"(id),
+    FOREIGN KEY (noteId) REFERENCES Io.Note(id)
 )
 
 CREATE TABLE Io.Tag (

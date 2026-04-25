@@ -89,6 +89,35 @@ BEGIN
 END
 GO
 
+-- SP: Dodaj istekle remindere u Io.LoggedReminder tablicu i izbriši ih iz Io.Reminder tablice
+CREATE PROCEDURE "Io".CleanPastReminders
+AS
+BEGIN
+
+	DECLARE csr_pastReminders CURSOR FOR SELECT groupId, noteId, timestamp FROM "Io".Reminder WHERE timestamp < CURRENT_TIMESTAMP;
+
+	BEGIN
+		DECLARE @groupId INT;
+		DECLARE @noteId INT;
+		DECLARE @timestamp DATETIME;
+
+		OPEN csr_pastReminders;
+		FETCH NEXT FROM csr_pastReminders INTO @groupId, @noteId, @timestamp;
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+			INSERT INTO "Io".LoggedReminder (groupId, noteId, fired) VALUES (@groupId, @noteId, @timestamp)
+		
+			DELETE FROM "Io".Reminder WHERE groupId = @groupId AND noteId = @noteId AND timestamp = @timestamp;
+
+			FETCH NEXT FROM csr_pastReminders INTO @groupId, @noteId, @timestamp;
+		END;
+
+		CLOSE csr_pastReminders;
+
+		DEALLOCATE csr_pastReminders;
+	END
+END;
+
 -- Funkcije ------------------------------------------------------
 -- FN: Dohvaćanje svih usera u grupi
 CREATE FUNCTION Sifrarnik.fn_GetGroupUsers (@groupId INT)
