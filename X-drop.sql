@@ -20,24 +20,28 @@ IF EXISTS (SELECT name FROM master.sys.server_principals WHERE name = 'User_Mate
 
 -- 3 stored procedures & functions
 --sp
-DROP PROCEDURE Sifrarnik.InsertUser;
-DROP PROCEDURE Sifrarnik.AddUserPermission;
-DROP PROCEDURE Sifrarnik.AddGroupPermission;
-DROP PROCEDURE Sifrarnik.LoginUser;
+DROP PROCEDURE IF EXISTS Sifrarnik.InsertUser;
+DROP PROCEDURE IF EXISTS Sifrarnik.AddUserPermission;
+DROP PROCEDURE IF EXISTS Sifrarnik.AddGroupPermission;
+DROP PROCEDURE IF EXISTS Sifrarnik.LoginUser;
 -- fn
-DROP FUNCTION Sifrarnik.fn_GetGroupUsers;
-DROP FUNCTION Sifrarnik.fn_GetUserGroups;
-DROP FUNCTION "Io".fn_GetFolderPath;
-DROP FUNCTION "Io".fn_GetNoteInfo;
-DROP FUNCTION "Io".fn_GetFolderUserPermission;
-DROP FUNCTION "Io".fn_GetFolderContent;
+DROP FUNCTION IF EXISTS Sifrarnik.fn_GetGroupUsers;
+DROP FUNCTION IF EXISTS Sifrarnik.fn_GetUserGroups;
+DROP FUNCTION IF EXISTS "Io".fn_GetFolderPath;
+DROP FUNCTION IF EXISTS "Io".fn_GetNoteInfo;
+DROP FUNCTION IF EXISTS "Io".fn_GetFolderUserPermission;
+DROP FUNCTION IF EXISTS "Io".fn_GetFolderContent;
 
 -- 2-ddl
 
 -- keys
-DROP SYMMETRIC KEY SimetricniKljuc;
-DROP ASYMMETRIC KEY AsimetricniKljuc;
-DROP MASTER KEY;
+BEGIN TRY
+	DROP SYMMETRIC KEY SimetricniKljuc;
+	DROP ASYMMETRIC KEY AsimetricniKljuc;
+	DROP MASTER KEY;
+END TRY
+BEGIN CATCH
+END CATCH
 
 -- triggers
 DROP TRIGGER IF EXISTS Sifrarnik.trig_Organisation_Insert;

@@ -121,14 +121,13 @@ GO
 
 
 -- Keys
--- Glavni kljuc
-CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'GlavniKljucPass'
+CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'GlavniKljucPass123!'
 GO
--- Asimetricni kljuc
+
 CREATE ASYMMETRIC KEY AsimetricniKLjuc
 WITH ALGORITHM = RSA_2048
 GO
--- Simetricni kljuc
+
 CREATE SYMMETRIC KEY SimetricniKljuc
 WITH ALGORITHM = AES_256
 ENCRYPTION BY ASYMMETRIC KEY AsimetricniKljuc
