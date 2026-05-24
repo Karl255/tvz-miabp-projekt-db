@@ -24,7 +24,17 @@ SELECT * FROM Sifrarnik."User" WHERE username = 'encryptedUser';
 EXEC Sifrarnik.LoginUser @username = 'encryptedUser', @password = 'encryptpass';
 
 -- Dinamičko maskiranje
+-- Maskirano
 EXECUTE AS USER = 'User_Masked';
+
+SELECT CURRENT_USER;
+
+SELECT * FROM Sifrarnik."User";
+SELECT * FROM "Io".Note;
+
+REVERT;
+
+-- Nemaskirano
 EXECUTE AS USER = 'User_Unmasked';
 
 SELECT CURRENT_USER;
