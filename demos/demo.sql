@@ -19,7 +19,7 @@ SELECT * FROM "Io".fn_GetNoteInfo(3); -- Notes
 SELECT "Io".fn_GetFolderUserPermission(6, 11); -- userId, folderId
 
 -- Enkripcija
-EXEC Sifrarnik.InsertUser @username = 'encryptedUser', @password = 'encryptpass', @email = 'encrypt@test.com', @organisationId = 1;
+EXEC Sifrarnik.InsertUser @username = 'encryptedUser', @password = 'encryptpass', @email = 'encrypt@test.com', @organisationId = 1, @dateOfBirth = '2002-06-16';
 SELECT * FROM Sifrarnik."User" WHERE username = 'encryptedUser';
 EXEC Sifrarnik.LoginUser @username = 'encryptedUser', @password = 'encryptpass';
 

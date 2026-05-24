@@ -58,7 +58,7 @@ BEGIN
 		CLOSE SYMMETRIC KEY SimetricniKljuc;
 	END
 	ELSE
-		SELECT 0 as result, 'Prijava neuspješna' as msg;
+		SELECT 0 as result, NULL as username, NULL as email;
 END
 GO
 
@@ -117,6 +117,7 @@ BEGIN
 		DEALLOCATE csr_pastReminders;
 	END
 END;
+GO
 
 -- Funkcije ------------------------------------------------------
 -- FN: Dohvaćanje svih usera u grupi
