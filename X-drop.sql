@@ -21,6 +21,7 @@ IF EXISTS (SELECT name FROM master.sys.server_principals WHERE name = 'User_Mate
 
 -- 3 stored procedures & functions
 --sp
+DROP PROCEDURE IF EXISTS "Io".CleanPastReminders;
 DROP PROCEDURE IF EXISTS Sifrarnik.InsertUser;
 DROP PROCEDURE IF EXISTS Sifrarnik.AddUserPermission;
 DROP PROCEDURE IF EXISTS Sifrarnik.AddGroupPermission;

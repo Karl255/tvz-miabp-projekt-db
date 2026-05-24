@@ -15,6 +15,7 @@ INSERT INTO Sifrarnik."Group" (name, type, organisationId) VALUES ('TVZ - Admin'
 INSERT INTO Sifrarnik."Group" (name, type, organisationId) VALUES ('TVZ - Dekan', 'CUSTOM', 2);
 INSERT INTO Sifrarnik."Group" (name, type, organisationId) VALUES ('TVZ - Referada', 'CUSTOM', 2);
 INSERT INTO Sifrarnik."Group" (name, type, organisationId) VALUES ('TVZ - Profesori', 'CUSTOM', 2);
+INSERT INTO Sifrarnik."Group" (name, type, organisationId) VALUES ('TVZ - Studenti', 'CUSTOM', 2);
 
 -- UserGroup
 -- User 'admin' to 'TVZ - Admin' Group
@@ -23,6 +24,8 @@ INSERT INTO Sifrarnik.GroupUser (userId, groupId) VALUES (3,9);
 INSERT INTO Sifrarnik.GroupUser (userId, groupId) VALUES (4,10);
 -- User 'teta_iz_referade' to 'TVZ - Referada' Group
 INSERT INTO Sifrarnik.GroupUser (userId, groupId) VALUES (5, 11);
+-- User 'student_user' to 'TVZ - Studenti' Group
+INSERT INTO Sifrarnik.GroupUser (userId, groupId) VALUES (2, 12);
 
 -- Folder
 INSERT INTO "Io".Folder (name) VALUES ('TVZ General');
@@ -85,3 +88,8 @@ INSERT INTO "Io".TaggedNote VALUES (2, 1);
 INSERT INTO "Io".TaggedNote VALUES (3, 3);
 INSERT INTO "Io".TaggedNote VALUES (3, 4);
 INSERT INTO "Io".TaggedNote VALUES (3, 5);
+
+-- Reminder
+INSERT INTO "Io".Reminder VALUES (12, 2, (SELECT DATEADD(DAY, 1, CURRENT_TIMESTAMP)));
+INSERT INTO "Io".Reminder VALUES (12, 3, (SELECT DATEADD(DAY, -1, CURRENT_TIMESTAMP)));
+INSERT INTO "Io".Reminder VALUES (2, 1, (SELECT DATEADD(DAY, -2, CURRENT_TIMESTAMP)));
