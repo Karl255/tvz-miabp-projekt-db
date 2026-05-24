@@ -2,7 +2,8 @@
 
 -- 4-security
 
-DROP USER IF EXISTS test_user;
+DROP USER IF EXISTS User_Unmasked;
+DROP USER IF EXISTS User_Masked;
 DROP USER IF EXISTS User_Pero;
 DROP USER IF EXISTS User_Karlo;
 DROP USER IF EXISTS User_Matej;

@@ -19,7 +19,7 @@ CREATE TABLE Sifrarnik."Group" (
 CREATE TABLE Sifrarnik."User" (
     id INT PRIMARY KEY IDENTITY(1,1),
     username VARCHAR(32) NOT NULL,
-    dateOfBirth DATE NOT NULL,
+    dateOfBirth DATE MASKED WITH(FUNCTION = 'default()') NOT NULL,
     -- SHA2-256
     passwordHash VARBINARY(256) NOT NULL,
     email VARBINARY(MAX) NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE Io.Permission (
 CREATE TABLE Io.Note (
     id INT PRIMARY KEY IDENTITY(1,1),  
     name VARCHAR(50) NOT NULL,
-	content VARCHAR(MAX) NOT NULL,
+	content VARCHAR(MAX) MASKED WITH(FUNCTION = 'partial(1,"...",0)') NOT NULL ,
 	folderId INT NOT NULL,
 	FOREIGN KEY (folderId) REFERENCES Io.Folder(id),
 	UNIQUE NONCLUSTERED (name, folderId)

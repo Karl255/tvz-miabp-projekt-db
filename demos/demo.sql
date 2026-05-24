@@ -24,14 +24,18 @@ SELECT * FROM Sifrarnik."User" WHERE username = 'encryptedUser';
 EXEC Sifrarnik.LoginUser @username = 'encryptedUser', @password = 'encryptpass';
 
 -- Dinamičko maskiranje
-ALTER TABLE Sifrarnik."User" ALTER COLUMN dateOfBirth ADD MASKED WITH(FUNCTION = 'default()');
-ALTER TABLE "Io".Note ALTER COLUMN content ADD MASKED WITH(FUNCTION = 'partial(1,"...",0)');
+-- Maskirano
+EXECUTE AS USER = 'User_Masked';
 
-CREATE USER test_user WITHOUT LOGIN;
-GRANT SELECT ON Sifrarnik."User" TO test_user;
-GRANT SELECT ON "Io".Note TO test_user;
+SELECT CURRENT_USER;
 
-EXECUTE AS USER = 'test_user';
+SELECT * FROM Sifrarnik."User";
+SELECT * FROM "Io".Note;
+
+REVERT;
+
+-- Nemaskirano
+EXECUTE AS USER = 'User_Unmasked';
 
 SELECT CURRENT_USER;
 
