@@ -13,6 +13,15 @@ CREATE USER User_Karlo FOR LOGIN User_Karlo;
 CREATE LOGIN User_Pero WITH PASSWORD = N'peropass', DEFAULT_DATABASE = master, CHECK_POLICY = OFF;
 CREATE USER User_Pero FOR LOGIN User_Pero;
 
+CREATE USER User_Masked WITHOUT LOGIN;
+GRANT SELECT ON Sifrarnik."User" TO User_Masked;
+GRANT SELECT ON "Io".Note TO User_Masked;
+
+CREATE USER User_Unmasked WITHOUT LOGIN;
+GRANT UNMASK TO User_Unmasked;
+GRANT SELECT ON Sifrarnik."User" TO User_Unmasked;
+GRANT SELECT ON "Io".Note TO User_Unmasked;
+
 -- admins
 GRANT IMPERSONATE ON USER::DB_Admin TO User_Matej;
 GRANT IMPERSONATE ON USER::DB_Admin TO User_Karlo;
