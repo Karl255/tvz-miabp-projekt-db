@@ -43,3 +43,21 @@ SELECT * FROM Sifrarnik."User";
 SELECT * FROM "Io".Note;
 
 REVERT;
+
+-- etc
+
+SELECT * FROM Sifrarnik.[User];
+SELECT * FROM "Io".Permission;
+SELECT * FROM "Io".Folder;
+SELECT "Io".fn_GetFolderPath(11);
+SELECT * FROM "Io".Note;
+SELECT n.id, CONCAT("Io".fn_GetFolderPath(n.folderId), '/', n.name), n.content FROM "Io".Note n;
+
+INSERT INTO "Io".Note (name, content, folderId) VALUES 
+(
+	'Test note', 
+	'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reiciendis, quidem. Quas aperiam explicabo, unde eum atque provident officia quos commodi. Quo sit assumenda quidem aut possimus minus accusamus saepe culpa.',
+	1
+);
+
+EXEC Sifrarnik.AddUserPermission @userId = 7, @folderId = 0, @permissionLevel = 'MANAGE';

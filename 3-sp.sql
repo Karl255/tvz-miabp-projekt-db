@@ -146,7 +146,7 @@ GO
 CREATE FUNCTION "Io".fn_GetFolderPath (@folderId INT)
 RETURNS VARCHAR(255) AS
 BEGIN
-	DECLARE @path VARCHAR(255) = (SELECT CONCAT(name,'/') FROM "Io".Folder WHERE id = @folderId);
+	DECLARE @path VARCHAR(255) = (SELECT CONCAT('/',name) FROM "Io".Folder WHERE id = @folderId);
 	DECLARE @currentFolderId INT = @folderId;
 	DECLARE @parentFolder INT;
 
@@ -155,7 +155,7 @@ BEGIN
 		SET @parentFolder = (SELECT parentFolderId FROM "Io".Folder WHERE id = @currentFolderId);
 
 		IF @parentFolder IS NOT NULL
-			SELECT @path = CONCAT(f.name, '/', @path), @currentFolderId = f.id FROM "Io".Folder f WHERE f.id = @parentFolder;
+			SELECT @path = CONCAT('/', f.name, @path), @currentFolderId = f.id FROM "Io".Folder f WHERE f.id = @parentFolder;
 		ELSE
 			BREAK
 	END

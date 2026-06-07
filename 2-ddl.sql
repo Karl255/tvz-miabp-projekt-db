@@ -23,7 +23,7 @@ CREATE TABLE Sifrarnik."User" (
     -- SHA2-256
     passwordHash VARBINARY(256) NOT NULL,
     email VARBINARY(MAX) NOT NULL,
-	INDEX IX_username (username)
+	CONSTRAINT UQ_username UNIQUE (username)
 );
 
 CREATE TABLE Sifrarnik.GroupUser (

@@ -2,7 +2,7 @@
   <configuration default="false" name="X-drop.sql" type="DatabaseScript" nameIsGenerated="true">
     <script-file value="$PROJECT_DIR$/X-drop.sql" />
     <script-mode>FILE</script-mode>
-    <data-source id="2c7147f4-b605-4a5b-b561-4d1a5bddea10" />
+    <data-source id="89181e3f-1b38-491e-a58c-6591218c7027" />
     <method v="2" />
   </configuration>
 </component>
